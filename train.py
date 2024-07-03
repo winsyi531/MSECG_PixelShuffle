@@ -13,7 +13,14 @@ from torchinfo import summary
 ######################
 
 ### construct loss function for training ###
-def STFTMSELoss(pred, gt):
+def STFT_MSELoss(pred, gt):
+    """
+    input:
+        pred: output from network
+        mask: ground truth
+    output:
+        loss value (STFT_MSE)
+    """
     # Compute STFT for both signals using torch.stft
     hann_window = torch.hann_window(256).cuda()
     assert pred.shape == gt.shape, f'The shapes of predicted and GT signals calculating STFT loss do not match!!!'
@@ -39,10 +46,10 @@ def structure_loss(pred, gt):
         pred: output from network
         mask: ground truth
     output:
-        loss value (mse)
+        loss value (mse+STFT_MSE)
     """
     loss = nn.MSELoss()
-    loss_stft = STFTMSELoss(pred, gt)
+    loss_stft = STFT_MSELoss(pred, gt)
     loss_mse = loss(pred, gt)
     
     score = loss_mse + loss_stft
@@ -54,10 +61,10 @@ def structure_loss(pred, gt):
 def test(opt, model, val_index, epoch):
     """
     input:
+        opt: parse arguments
         model: network
-        path: folder path of dataset
-        dataset: name of dataset (useless)
-        testsize: spatial size of testing images
+        val_index: index for validation
+        epoch: current epoch
     output:
         validation Dice performance
     """

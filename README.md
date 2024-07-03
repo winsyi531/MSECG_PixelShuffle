@@ -4,7 +4,9 @@ This is a pytorch version code for [SRECG: ECG Signal Super-resolution Framework
 
 ## Introduction
 
-This neural network is designed for Super-Resolution (SR) task. For now, we use [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) dataset for training, validation, and testing.
+This neural network is designed for Super-Resolution (SR) task, and the architecture is based on [SRResNet](https://arxiv.org/abs/1609.04802).
+
+For now, we use [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) dataset for the experiment.
 
 For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this paper [DCAE-SR: Design of a Denoising Convolutional Autoencoder for reconstructing Electrocardiograms signals at Super Resolution](https://arxiv.org/abs/2404.15307).
 
@@ -33,7 +35,7 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       │     └── generate_index.py               # Generate indexes for three datasets
       │
       ├── train.py                              # Training process
-      ├── inference.py                          # Inference process, results are stored in the sr_signal folder
+      ├── inference.py                          # Inference process, results are stored in sr_signal
       ├── evaluate.py                           # Evaluate the performance between results and GT
       └── Train_Inference.sh                    # Scripting file through all process
 

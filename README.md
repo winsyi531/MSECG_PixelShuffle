@@ -76,13 +76,25 @@ python evaluate.py
 ```
 
 ## Performance
-$x_i \rightarrow$ predicted SR signals, $y_i \rightarrow$ ground truth SR signals
 
-$MSE(x_i, y_i)=\dfrac{1}{N} \sum_{i=1}^{N} (x_i-y_i)^{2}$
+ Model | Train Loss | MSE $\downarrow$ | RMSE $\downarrow$ | SSIM $\uparrow$ | SNR $\uparrow$ | PSNR $\uparrow$ |
+  ---  |    ---     |    ---           |     ---           |         ---     |         ---    |         ---     |
+ SRECG |    MSE     |  0.000421        |   0.018314        |   0.987028      |  21.484913     |  40.013966      |
+ &nbsp;|  MSE+Mag.  |    ---           |     ---           |     ---         |     ---        |     ---         |
 
- Model | Train Loss | MSE &darr; | RMSE &darr; | SSIM &uarr; | SNR &uarr; | PSNR &uarr; |
-  ---  |    ---     |    ---     |     ---     |     ---     |     ---    |     ---     |
- SRECG |    MSE     |  0.000421  |   0.018314  |   0.987028  |  21.484913 |  40.013966  |
- &nbsp;|  MSE+Mag.  |    ---     |     ---     |     ---     |     ---    |     ---     |
+> $x_i \rightarrow$ predicted SR signal
+
+> $y_i \rightarrow$ ground truth SR signal
+
+> $MSE(x_{i},y_{i})=\dfrac{1}{N} \Sigma_{i=1}^{N} (x_i-y_i)^{2}$
+
+> $RMSE(x_{i},y_{i})=\sqrt{MSE(x_{i},y_{i})}$
+
+> $SSIM(x,y)=\dfrac{(2\mu_{x}\mu_{y}+C_{1})(2\sigma_{xy}+C_{2})}{(\mu_{x}^{2}+\mu_{y}^{2}+C_{1})(\sigma_{x}^{2}+\sigma_{y}^{2}+C_{2})}$
+
+> $SNR(x_{i},y_{i})=10\cdot \log_{10}\left(\dfrac{\Sigma_{i=1}^{N}x_{i}^{2}}{\Sigma_{i=1}^{N}(x_{i}-y_{i})^{2}}\right)$
+
+> $PSNR(x_{i},y_{i})=10\cdot \log_{10}\left( \dfrac{\left[\max(x_i)\right]^{2}}{MSE(x_{i},y_{i})}\right)$
+
 
 

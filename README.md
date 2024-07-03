@@ -40,37 +40,49 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       └── Train_Inference.sh                    # Scripting file through all process
 
 ## Usage
+> It is recommended running the codes in virtual environments, such as [Anaconda](https://www.anaconda.com/download) or [Miniconda](https://docs.anaconda.com/miniconda/).
 
 ### ※ Training process:
-If you don't want to set training with arguments, you can modify the "default" section in train.py, and simply use
+- If you don't want to set training with arguments, you can modify the "default" section in train.py, and simply use
 ```
 python train.py
 ```
 
-If regenerating the dataset index is necessary, you can specify the argument by
+- If regenerating the dataset index is necessary, you can specify the argument by
 ```
 python train.py --regenerate_index True
 ```
 
-You should also modify the path to your dataset by
+- You should also modify the path to your dataset by
 ```
 python train.py --dataset_dir '/path/to/dataset/'
 ```
 
-Hyperparameters, such as batch size, epoch, and down-sampling rate can also be specified by
+- Hyperparameters, such as batch size, epoch, and down-sampling rate, can also be specified by
 ```
 python train.py --batchsize 16 --epoch 100 --downsample_rate 10
 ```
 
 ### ※ Inference process:
-SR signals will be stored in the 'sr_signal' folder
+- SR signals will be stored in the 'sr_signal' folder
 ```
 python inference.py
 ```
 
 ### ※ Evaluation process:
-Evaluate the performance by five evaluation metrics, you can use
+- Evaluate the performance by five evaluation metrics, you can use
 ```
 python evaluate.py
 ```
+
+## Performance
+$x_i \rightarrow$ predicted SR signals, $y_i \rightarrow$ ground truth SR signals
+
+$MSE(x_i, y_i)=\dfrac{1}{N} \sum_{i=1}^{N} (x_i-y_i)^{2}$
+
+ Model | Train Loss | MSE &darr; | RMSE &darr; | SSIM &uarr; | SNR &uarr; | PSNR &uarr; |
+  ---  |    ---     |    ---     |     ---     |     ---     |     ---    |     ---     |
+ SRECG |    MSE     |  0.000421  |   0.018314  |   0.987028  |  21.484913 |  40.013966  |
+ &nbsp;|  MSE+Mag.  |    ---     |     ---     |     ---     |     ---    |     ---     |
+
 

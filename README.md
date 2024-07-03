@@ -57,14 +57,9 @@ You should also modify the path to your dataset by
 python train.py --dataset_dir '/path/to/dataset/'
 ```
 
-The batch size and epoch can also be specified by
+Hyperparameters, such as batch size, epoch, and down-sampling rate can also be specified by
 ```
-python train.py --batchsize 16 --epoch 100
-```
-
-If you want to change the down-sampling rate, you can use
-```
-python train.py --downsample_rate 10
+python train.py --batchsize 16 --epoch 100 --downsample_rate 10
 ```
 
 ### ※ Inference process:

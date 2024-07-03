@@ -42,7 +42,7 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
 ## Usage
 
 ### ※ Training process:
-If you don't want to specify the setting with arguments, you can modify the "default" section in train.py, simply use
+If you don't want to set training with arguments, you can modify the "default" section in train.py, and simply use
 ```
 python train.py
 ```

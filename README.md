@@ -41,7 +41,7 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
 
 ## Usage
 
-### Training process
+### ※ Training process:
 If you don't want to specify the setting with arguments, you can modify the "default" section in train.py, simply use
 ```
 python train.py
@@ -67,13 +67,13 @@ If you want to change the down-sampling rate, you can use
 python train.py --downsample_rate 10
 ```
 
-### Inference process
+### ※ Inference process:
 SR signals will be stored in the 'sr_signal' folder
 ```
 python inference.py
 ```
 
-### Evaluation process
+### ※ Evaluation process:
 Evaluate the performance by five evaluation metrics, you can use
 ```
 python evaluate.py

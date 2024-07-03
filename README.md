@@ -8,7 +8,7 @@ This neural network is designed for Super-Resolution (SR) task. For now, we use 
 
 For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this paper [DCAE-SR: Design of a Denoising Convolutional Autoencoder for reconstructing Electrocardiograms signals at Super Resolution](https://arxiv.org/abs/2404.15307).
 
-### Data layout
+## Data layout
 
     SRECG
       ├── dataset_index
@@ -37,9 +37,9 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       ├── evaluate.py                           # Evaluate the performance between results and GT
       └── Train_Inference.sh                    # Scripting file through all process
 
-### Usage
+## Usage
 
-#### Training process
+### Training process
 If you don't want to specify the setting with arguments, you can modify the "default" section in train.py, simply use
 ```
 python train.py
@@ -65,13 +65,13 @@ If you want to change the down-sampling rate, you can use
 python train.py --downsample_rate 10
 ```
 
-#### Inference process
+### Inference process
 SR signals will be stored in the 'sr_signal' folder
 ```
 python inference.py
 ```
 
-#### Evaluation process
+### Evaluation process
 Evaluate the performance by five evaluation metrics, you can use
 ```
 python evaluate.py

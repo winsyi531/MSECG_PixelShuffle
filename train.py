@@ -7,38 +7,14 @@ import argparse
 from model.model import SRECG
 from utils.dataloader import get_loader, test_dataset, get_dataset_filelist
 from utils.generate_index import generate
+from utils.loss_function import MSE_LOSS, MAG_MSE_Loss, COM_MSE_Loss
 import numpy as np
 from tqdm import tqdm
 from torchinfo import summary
 ######################
 
 ### construct loss function for training ###
-def STFT_MSELoss(pred, gt):
-    """
-    input:
-        pred: output from network
-        mask: ground truth
-    output:
-        loss value (STFT_MSE)
-    """
-    # Compute STFT for both signals using torch.stft
-    hann_window = torch.hann_window(256).cuda()
-    assert pred.shape == gt.shape, f'The shapes of predicted and GT signals calculating STFT loss do not match!!!'
-    total_stft_loss = 0
-    for b in range(pred.shape[0]):
-        for c in range(pred.shape[1]):
-            Zxx_pred = torch.stft(pred[b, c, :].squeeze(), n_fft=256, hop_length=128, win_length=256, window=hann_window, center=True, return_complex=True)
-            Zxx_gt = torch.stft(gt[b, c, :].squeeze(), n_fft=256, hop_length=128, win_length=256, window=hann_window, center=True, return_complex=True)
 
-            # Compute magnitude of STFT
-            magnitude_pred = torch.abs(Zxx_pred)
-            magnitude_gt = torch.abs(Zxx_gt)
-
-            # Compute MSE loss
-            stft_loss = F.mse_loss(magnitude_pred, magnitude_gt)
-            total_stft_loss += stft_loss
-
-    return total_stft_loss / (pred.shape[0]*pred.shape[1])
 
 def structure_loss(pred, gt):
     """
@@ -48,11 +24,10 @@ def structure_loss(pred, gt):
     output:
         loss value (mse+STFT_MSE)
     """
-    loss = nn.MSELoss()
-    loss_stft = STFT_MSELoss(pred, gt)
-    loss_mse = loss(pred, gt)
+    loss_com = COM_MSE_Loss(pred, gt)
+    loss_mse = MSE_LOSS(pred, gt)
     
-    score = loss_mse + loss_stft
+    score = loss_mse + loss_com
     
     return score
 ############################################

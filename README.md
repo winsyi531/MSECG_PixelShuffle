@@ -79,8 +79,8 @@ python evaluate.py
 
  Model | Train Loss | MSE $\downarrow$ | RMSE $\downarrow$ | SSIM $\uparrow$ | SNR $\uparrow$ | PSNR $\uparrow$ |
   ---  |    ---     |    ---           |     ---           |         ---     |         ---    |         ---     |
- SRECG |    MSE     |  0.000421        |   0.018314        |   0.987028      |  21.484913     |  40.013966      |
- &nbsp;|  MSE+Mag.  |    ---           |     ---           |     ---         |     ---        |     ---         |
+ SRECG |    MSE     |     0.000421     |      0.018314     |     0.987028    |    21.484913   |    40.013966    |
+ &nbsp;|  MSE+Mag.  |     0.024077     |      0.133012     |     0.786101    |     4.416252   |    23.329115    |
 
 > $x_i \rightarrow$ predicted SR signal
 

@@ -7,10 +7,10 @@ import numpy as np
 This is a file containing several loss functions
 '''
 
-def mag_pha_stft(y, n_fft=256, hop_size=128, win_size=256, compress_factor=1.0, center=True):
+def mag_pha_stft(y, n_fft=400, hop_size=100, win_size=400, compress_factor=1.0, center=True):
     hann_window = torch.hann_window(win_size).cuda()
     stft_spec = torch.stft(y, n_fft, hop_length=hop_size, win_length=win_size, window=hann_window,
-                           center=center, pad_mode='reflect', normalized=False, return_complex=True)
+                           center=center, pad_mode='reflect', normalized=False, onesided=True, return_complex=True)
     # Get real and imaginary parts
     real_part = stft_spec.real
     imag_part = stft_spec.imag
@@ -50,8 +50,8 @@ def MAG_MSE_Loss(pred, gt, compress_factor=1.0):
     total_loss = 0
     for b in range(pred.shape[0]):
         for c in range(pred.shape[1]):
-            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=1.0)
-            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=1.0)
+            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=compress_factor)
+            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=compress_factor)
 
             # Compute MSE loss
             mag_mse_loss = F.mse_loss(mag_pred, mag_gt)
@@ -72,8 +72,8 @@ def COM_MSE_Loss(pred, gt, compress_factor=1.0):
     total_loss = 0
     for b in range(pred.shape[0]):
         for c in range(pred.shape[1]):
-            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=1.0)
-            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=1.0)
+            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=compress_factor)
+            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=compress_factor)
 
             # Compute MSE loss
             mag_mse_loss = F.mse_loss(com_pred, com_gt)

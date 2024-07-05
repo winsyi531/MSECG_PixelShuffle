@@ -16,7 +16,7 @@ from torchinfo import summary
 ### construct loss function for training ###
 
 
-def structure_loss(pred, gt):
+def structure_loss(opt, pred, gt):
     """
     input:
         pred: output from network
@@ -24,7 +24,8 @@ def structure_loss(pred, gt):
     output:
         loss value (mse+STFT_MSE)
     """
-    loss_com = COM_MSE_Loss(pred, gt)
+    #loss_com = COM_MSE_Loss(pred, gt, opt.compress_factor)
+    loss_com = MAG_MSE_Loss(pred, gt, opt.compress_factor)
     loss_mse = MSE_LOSS(pred, gt)
     
     score = loss_mse + loss_com
@@ -76,7 +77,7 @@ def train(opt, train_loader, model, optimizer, epoch, validation_indexes):
         # ---- forward ----
         sr_audio = model(ds_audio)
         # ---- loss function ----         
-        loss = structure_loss(sr_audio, gt_audio)
+        loss = structure_loss(opt, sr_audio, gt_audio)
         # ---- backward ----
         loss.backward()
         optimizer.step()
@@ -116,6 +117,8 @@ if __name__ == '__main__':
                         default=300, help='epoch number')
     parser.add_argument('--downsample_rate', type=int,
                         default=10, help='how many times to down sample the signals')
+    parser.add_argument('--compress_factor', type=float,
+                        default=1.0, help='factor compressing the magnitude')
     parser.add_argument('--lr', type=float,
                         default=1e-4, help='learning rate')
     parser.add_argument('--optimizer', type=str,

@@ -64,6 +64,11 @@ python train.py --dataset_dir '/path/to/dataset/'
 python train.py --batchsize 16 --epoch 100 --downsample_rate 10
 ```
 
+- Training loss functions (mse, mse_mag_compm mse_com_comp) and compress factor for the spectrogram can be specified by
+```
+python train.py --loss mse_mag --compress_factor 0.3
+```
+
 ### ※ Inference process:
 - SR signals will be stored in the 'sr_signal' folder
 ```

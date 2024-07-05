@@ -64,7 +64,7 @@ python train.py --dataset_dir '/path/to/dataset/'
 python train.py --batchsize 16 --epoch 100 --downsample_rate 10
 ```
 
-- Training loss functions (mse, mse_mag_compm mse_com_comp) and compress factor for the spectrogram can be specified by
+- Training loss functions (mse/mse_mag/mse_com) and compress factor for the spectrogram can be specified by
 ```
 python train.py --loss mse_mag --compress_factor 0.3
 ```

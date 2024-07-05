@@ -32,7 +32,8 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       │
       ├── utils                                 # Store functional python files
       │     ├── dataloader.py                   # Methods how to load different datasets
-      │     └── generate_index.py               # Generate indexes for three datasets
+      │     ├── generate_index.py               # Generate indexes for three datasets
+      │     └── loss_function.py                # Every loss function is here
       │
       ├── train.py                              # Training process
       ├── inference.py                          # Inference process, results are stored in sr_signal
@@ -96,5 +97,18 @@ python evaluate.py
 
 > $PSNR(x_{i},y_{i})=10\cdot \log_{10}\left( \dfrac{\left[\max(x_i)\right]^{2}}{MSE(x_{i},y_{i})}\right)$
 
-
+## BibTeX
+If you want to use this code, please cite the paper below.
+```bibtex
+@article{chen2023srecg,
+  title={SRECG: ECG Signal Super-Resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification},
+  author={Chen, Tsai-Min and Tsai, Yuan-Hong and Tseng, Huan-Hsin and Liu, Kai-Chun and Chen, Jhih-Yu and Huang, Chih-Han and Li, Guo-Yuan and Shen, Chun-Yen and Tsao, Yu},
+  journal={IEEE Transactions on Consumer Electronics},
+  volume={69},
+  number={3},
+  pages={250--260},
+  year={2023},
+  publisher={IEEE}
+}
+```
 

@@ -99,7 +99,7 @@ python evaluate.py
 > $PSNR(x_{i},y_{i})=10\cdot \log_{10}\left( \dfrac{\left[\max(x_i)\right]^{2}}{MSE(x_{i},y_{i})}\right)$
 
 ## BibTeX
-If you want to use this code, please cite the paper below.
+If you want to use this code, please cite this paper:
 ```bibtex
 @article{chen2023srecg,
   title={SRECG: ECG Signal Super-Resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification},

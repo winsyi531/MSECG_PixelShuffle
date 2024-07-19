@@ -1,4 +1,4 @@
-# SRECG_torch
+# SRECG_noisy
 
 This is a pytorch version code for [SRECG: ECG Signal Super-resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification](https://arxiv.org/abs/2012.03803).
 
@@ -22,18 +22,19 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       │     ├── model.py                        # Main architecture of SRECG
       │     └── parts.py                        # Modules adopted in the SRECG
       │
-      ├── model_pth
-      │     └── SRECG-best.pth                  # Checkpoint file for the best performance
+      ├── model_pth                             # Checkpoint file for the best performance
+      │     └── SRECG-best.pth                  # You have to train your own checkpoint files
       │
       ├── sr_signal                             # Folder for SR signals
-      │     ├── SR signal 1
+      │     ├── SR signal 1                     # You have to inference your own signals
       │     ├──     :
       │     └── SR signal N
       │
       ├── utils                                 # Store functional python files
       │     ├── dataloader.py                   # Methods how to load different datasets
       │     ├── generate_index.py               # Generate indexes for three datasets
-      │     └── loss_function.py                # Every loss function is here
+      │     ├── loss_function.py                # Every loss function is here
+      │     └── utils.py                        # Several useful functions
       │
       ├── train.py                              # Training process
       ├── inference.py                          # Inference process, results are stored in sr_signal
@@ -56,12 +57,12 @@ python train.py --regenerate_index True
 
 - You should also modify the path to your dataset by
 ```
-python train.py --dataset_dir '/path/to/dataset/'
+python train.py --dataset_dir '/path/to/dataset/' --noise_dir '/path/to/dataset/'
 ```
 
 - Hyperparameters, such as batch size, epoch, and down-sampling rate, can also be specified by
 ```
-python train.py --batchsize 16 --epoch 100 --downsample_rate 10
+python train.py --batchsize 64 --epoch 350 --decay_epoch 300 --downsample_rate 10
 ```
 
 - Training loss functions (mse/mse_mag/mse_com) and compress factor for the spectrogram can be specified by

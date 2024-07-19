@@ -1,4 +1,4 @@
 ##### 1 #####
-python train.py --mamba_in_ch 128 --n_layer 1 --bidirectional False &&
-python inference.py --mamba_in_ch 128 --n_layer 1 --bidirectional False &&
+python train.py --n_layer 5 --bidirectional True &&
+python inference.py --n_layer 5 --bidirectional True &&
 python evaluate.py

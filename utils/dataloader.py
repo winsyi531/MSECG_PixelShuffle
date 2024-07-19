@@ -28,8 +28,8 @@ class PTB_XLDataset(data.Dataset):
             noise_wave, _ = wfdb.rdsamp(noise_path)
             noise_wave = np.array(noise_wave, dtype=np.float32)
             #downsample the noise from 360Hz to 50Hz
-            down_fs = int(noise_wave.shape[0]//(360/50))
-            noise_down = resample(noise_wave, down_fs)
+            down_fs = (360//50)
+            noise_down = noise_wave[::down_fs]
             self.noise[noise] = noise_down
         self.size = len(self.signals)
 
@@ -54,9 +54,8 @@ class PTB_XLDataset(data.Dataset):
         assert hr_signal.shape[0] == 5000
 
         # Down-sample the hr_signal to 50Hz
-        origin_fs = hr_signal.shape[0] # (5000)
-        down_fs = origin_fs // self.down_sample # 5000 // 10 = 500
-        ds_signal = resample(hr_signal, down_fs, axis=0) # (500, 12)
+        down_fs = 10
+        ds_signal = hr_signal[::down_fs] # (500, 12)
         assert ds_signal.shape[0] == 500, f'Downsampled signal does not match the downsampling result!!!'
         
         #sample the noise segment start point
@@ -116,8 +115,8 @@ class test_dataset:
             noise_wave, _ = wfdb.rdsamp(noise_path)
             noise_wave = np.array(noise_wave, dtype=np.float32)
             #downsample the noise from 360Hz to 50Hz
-            down_fs = int(noise_wave.shape[0]//(360/50))
-            noise_down = resample(noise_wave, down_fs)
+            down_fs = (360//50)
+            noise_down = noise_wave[::down_fs]
             self.noise[noise] = noise_down
         self.size = len(self.signals)
         self.index = 0
@@ -143,9 +142,8 @@ class test_dataset:
         assert hr_signal.shape[0] == 5000
         
         # Down-sample the hr_signal to 50Hz
-        origin_fs = hr_signal.shape[0] # (5000)
-        down_fs = origin_fs // self.down_sample # 5000 // 10 = 500
-        ds_signal = resample(hr_signal, down_fs, axis=0) # (500, 12)
+        down_fs = 10
+        ds_signal = hr_signal[::down_fs] # (500, 12)
         assert ds_signal.shape[0] == 500, f'Downsampled signal does not match the downsampling result!!!'
 
         #sample the noise segment start point

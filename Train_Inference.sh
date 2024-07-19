@@ -1,4 +1,4 @@
 ##### 1 #####
-python train.py --compress_factor 0.3 &&
-python inference.py &&
+python train.py --mamba_in_ch 128 --n_layer 1 --bidirectional False &&
+python inference.py --mamba_in_ch 128 --n_layer 1 --bidirectional False &&
 python evaluate.py

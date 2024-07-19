@@ -4,8 +4,11 @@ import numpy as np
 import pandas as pd
 
 ### Read csv file and write the corresponding train / validation / testing file names to txt files
-def generate(opt, train_fold, val_fold, test_fold):
+def generate(opt):
     csv = pd.read_csv(opt.dataset_dir+'ptbxl_database.csv', index_col='ecg_id')
+    train_fold = [1, 2, 3, 4, 5, 6, 7, 8]
+    val_fold = [9]
+    test_fold = [10]
     fold = np.array([f for f in csv.strat_fold])
     file_name = [opt.dataset_dir+fn for fn in csv.filename_hr]
 

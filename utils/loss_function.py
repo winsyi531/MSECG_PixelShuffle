@@ -7,23 +7,24 @@ import numpy as np
 This is a file containing several loss functions
 '''
 
-def mag_pha_stft(y, n_fft=400, hop_size=100, win_size=400, compress_factor=1.0, center=True):
+def mag_pha_stft(y, n_fft=64, hop_size=16, win_size=64, compress_factor=1.0, center=True):
     hann_window = torch.hann_window(win_size).cuda()
-    stft_spec = torch.stft(y, n_fft, hop_length=hop_size, win_length=win_size, window=hann_window,
+    stft_spec = torch.stft(y, n_fft=n_fft, hop_length=hop_size, win_length=win_size, window=hann_window,
                            center=center, pad_mode='reflect', normalized=False, onesided=True, return_complex=True)
     # Get real and imaginary parts
     real_part = stft_spec.real
     imag_part = stft_spec.imag
 
     # compute magnitude and phase
-    mag = torch.sqrt(real_part.pow(2)+imag_part.pow(2)+1e-10)
-    pha = torch.atan2(real_part+1e-10, imag_part+1e-10)
+    #mag = torch.sqrt(real_part.pow(2)+imag_part.pow(2)+1e-10)
+    #pha = torch.atan2(real_part+1e-10, imag_part+1e-10)
 
     # Magnitude Compression
-    mag = torch.pow(mag, compress_factor)
-    com = torch.stack((mag*torch.cos(pha), mag*torch.sin(pha)), dim=-1)
+    #mag = torch.pow(mag, compress_factor)
+    #com = torch.stack((mag*torch.cos(pha), mag*torch.sin(pha)), dim=-1)
 
-    return mag, pha, com
+    #return mag, pha, com, real_part, imag_part
+    return real_part, imag_part
 
 def MSE_LOSS(pred, gt):
     """
@@ -37,7 +38,7 @@ def MSE_LOSS(pred, gt):
     
     return mse
 
-def MAG_MSE_Loss(pred, gt, compress_factor=1.0):
+def MAG_MSE_Loss(pred, gt, n_fft=64, compress_factor=1.0):
     """
     input:
         pred: output from network
@@ -50,8 +51,10 @@ def MAG_MSE_Loss(pred, gt, compress_factor=1.0):
     total_loss = 0
     for b in range(pred.shape[0]):
         for c in range(pred.shape[1]):
-            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=compress_factor)
-            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=compress_factor)
+            #mag_pred, pha_pred, com_pred, _, _ = mag_pha_stft(pred[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            #mag_gt, pha_gt, com_gt, _, _ = mag_pha_stft(gt[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            real_pred, imag_pred = mag_pha_stft(pred[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            real_gt, imag_gt = mag_pha_stft(gt[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
 
             # Compute MSE loss
             mag_mse_loss = F.mse_loss(mag_pred, mag_gt)
@@ -59,7 +62,7 @@ def MAG_MSE_Loss(pred, gt, compress_factor=1.0):
 
     return total_loss / (pred.shape[0]*pred.shape[1])
 
-def COM_MSE_Loss(pred, gt, compress_factor=1.0):
+def COM_MSE_Loss(pred, gt, n_fft=64, compress_factor=1.0):
     """
     input:
         pred: output from network
@@ -72,8 +75,10 @@ def COM_MSE_Loss(pred, gt, compress_factor=1.0):
     total_loss = 0
     for b in range(pred.shape[0]):
         for c in range(pred.shape[1]):
-            mag_pred, pha_pred, com_pred = mag_pha_stft(pred[b, c, :].squeeze(), compress_factor=compress_factor)
-            mag_gt, pha_gt, com_gt = mag_pha_stft(gt[b, c, :].squeeze(), compress_factor=compress_factor)
+            #mag_pred, pha_pred, com_pred, _, _ = mag_pha_stft(pred[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            #mag_gt, pha_gt, com_gt, _, _ = mag_pha_stft(gt[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            real_pred, imag_pred = mag_pha_stft(pred[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            real_gt, imag_gt = mag_pha_stft(gt[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
 
             # Compute MSE loss
             mag_mse_loss = F.mse_loss(com_pred, com_gt)
@@ -81,7 +86,27 @@ def COM_MSE_Loss(pred, gt, compress_factor=1.0):
 
     return total_loss / (pred.shape[0]*pred.shape[1])
 
+def RI_MSE_Loss(pred, gt, n_fft=64, compress_factor=1.0):
+    """
+    input:
+        pred: output from network
+        mask: ground truth
+    output:
+        loss value (STFT_MSE)
+    """
+    assert pred.shape == gt.shape, f'The shapes of predicted and GT signals calculating STFT loss do not match!!!'
+    
+    total_loss = 0
+    for b in range(pred.shape[0]):
+        for c in range(pred.shape[1]):
+            real_pred, imag_pred = mag_pha_stft(pred[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
+            real_gt, imag_gt = mag_pha_stft(gt[b, c, :].squeeze(), n_fft=n_fft, hop_size=n_fft//4, win_size=n_fft, compress_factor=compress_factor)
 
+            # Compute MSE loss
+            ri_mse_loss = F.mse_loss(real_pred, real_gt) + F.mse_loss(imag_pred, imag_gt)
+            total_loss += ri_mse_loss
+
+    return total_loss / (pred.shape[0]*pred.shape[1])
 
 
 

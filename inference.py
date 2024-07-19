@@ -5,16 +5,21 @@ from model.model import SRECG
 from utils.dataloader import test_dataset, get_dataset_filelist
 from tqdm import tqdm
 import wfdb
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--mamba_in_ch', type=int, default=128, help='channels for input of Mamba block')
+    parser.add_argument('--n_layer', type=int, default=1, help='number of layers for Mamba block')
+    parser.add_argument('--bidirectional', type=str, default='False', help='True or False for Bi-Directional Mamba')
     parser.add_argument('--pth_path', type=str, default='./model_pth/SRECG-best.pth') # input model checkpoint file
-    parser.add_argument('--downsample_rate', type=int, default=10, help='how many times to down sample the signalse')
+    parser.add_argument('--downsample_rate', type=int, default=10, help='how many times to down sample the signals')
     parser.add_argument('--input_testing_file', type=str, default='./dataset_index/test.txt')
+    parser.add_argument('--noise_dir', type=str, default='/dataset/MIT-BIH_noise/')
     opt = parser.parse_args()
 
     ### set network ###
-    model = SRECG()
+    model = SRECG(opt.mamba_in_ch, opt.n_layer, opt.bidirectional)
     
     ### input model checkpoint file ###
     model.load_state_dict(torch.load(opt.pth_path))
@@ -29,7 +34,7 @@ if __name__ == '__main__':
 
     mode = 'test'
     testing_indexes = get_dataset_filelist(opt, mode)
-    test_loader = test_dataset(testing_indexes, opt.downsample_rate)
+    test_loader = test_dataset(testing_indexes, opt)
     num1 = len(testing_indexes)
 
     for i in tqdm(range(num1), (f'Inference'), unit=' signal'):
@@ -38,12 +43,5 @@ if __name__ == '__main__':
         
         sr_audio = model(ds_audio)
         sr_audio = torch.transpose(sr_audio, 1, 2).to(dtype=torch.float64).cpu().detach().numpy().squeeze()
-        np.save(save_path+name+'.npy', sr_audio)
+        np.save(save_path+name+'_sr.npy', sr_audio)
     print('Finish inference process.')
-        #wfdb.wrsamp(
-        #    record_name = save_path + name,
-        #    fs = 500,
-        #    units = ['mV'] * sr_audio.shape[1],
-        #    sig_name = [f'ECG{i+1}' for i in range(sr_audio.shape[1])],
-        #    p_signal = sr_audio
-        #)

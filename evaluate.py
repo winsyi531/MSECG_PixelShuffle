@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import wfdb
 from skimage.metrics import structural_similarity as ssim
 from tqdm import tqdm
+from utils.dataloader import butter_bandpass_filter
 
 ### path of testing signals and ground truth ###
 gt_index = './dataset_index/test.txt'
@@ -54,6 +55,7 @@ def calculate_mse(gt_signal, pred_signal):
 ### calculate the average of dice, recall, precision value of all testing images ###
 for i, name in enumerate(tqdm(gt_name, (f'Evaluation'),unit=' signal')):
     gt_sig, _ = wfdb.rdsamp(name)
+    gt_sig = butter_bandpass_filter(data=gt_sig, lowcut=1, highcut=45, fs=500, order=2)
     pd_sig = np.load(pd_path+pd_name[i])
     gt_sig, pd_sig = gt_sig.flatten(), pd_sig.flatten()
     assert len(gt_sig) == len(pd_sig), f'The lengths between ground truth and predicted signals do not match!!!'
@@ -79,26 +81,26 @@ average_snr /= pd_num
 average_psnr /= pd_num
 
 f = open(txt_path_mse, 'a')
-f.write('{}\n'.format(average_mse))
+f.write('{:.6f}\n'.format(average_mse))
 f.close()
 print("Total Average MSE Score: {:.6f}".format(average_mse))
 
 f = open(txt_path_rmse, 'a')
-f.write('{}\n'.format(average_rmse))
+f.write('{:.6f}\n'.format(average_rmse))
 f.close()
 print("Total Average RMSE Score: {:.6f}".format(average_rmse))
 
 f = open(txt_path_ssim, 'a')
-f.write('{}\n'.format(average_ssim))
+f.write('{:.6f}\n'.format(average_ssim))
 f.close()
 print("Total Average SSIM Score: {:.6f}".format(average_ssim))
 
 f = open(txt_path_snr, 'a')
-f.write('{}\n'.format(average_snr))
+f.write('{:.6f}\n'.format(average_snr))
 f.close()
 print("Total Average SNR Score: {:.6f}".format(average_snr))
 
 f = open(txt_path_psnr, 'a')
-f.write('{}\n'.format(average_psnr))
+f.write('{:.6f}\n'.format(average_psnr))
 f.close()
 print("Total Average PSNR Score: {:.6f}".format(average_psnr))

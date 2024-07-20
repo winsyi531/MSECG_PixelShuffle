@@ -63,6 +63,11 @@ python train.py --regenerate_index True
 python train.py --dataset_dir '/path/to/dataset/' --noise_dir '/path/to/dataset/'
 ```
 
+- The number of the input channel, the layer number of the Mamba block, and whether use bidirectional Mamba can be specified by
+```
+python train.py --mamba_in_ch 128 --n_layer 5 --bidirectional True
+```
+
 - Hyperparameters, such as batch size, epoch, and down-sampling rate, can also be specified by
 ```
 python train.py --batchsize 64 --epoch 350 --decay_epoch 300 --downsample_rate 10
@@ -84,6 +89,7 @@ python inference.py
 ```
 python evaluate.py
 ```
+Five scores will be stored in five different txt files.
 
 ## Performance
 ![SRECG Performance](figs/performance.png)

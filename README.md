@@ -1,4 +1,4 @@
-# SMECG
+# MSECG
 
 This network is based on a SR model of [SRECG: ECG Signal Super-resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification](https://arxiv.org/abs/2012.03803).
 We replace the Residual Blocks in the intermediate layers of SRECG with Mamba blocks.
@@ -7,15 +7,15 @@ We replace the Residual Blocks in the intermediate layers of SRECG with Mamba bl
 
 The architecture of the SRECG is designed for Super-Resolution (SR) task, and the architecture is based on [SRResNet](https://arxiv.org/abs/1609.04802).
 
-For now, we use [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) dataset for the experiment. We also aggregate the noise dataset [MIT-BIH Noise Stress Test Database](https://physionet.org/content/nstdb/1.0.0/) with the clean PTB-XL dataset for training, ehancing the robustness of our SMECG.
+For now, we use [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) dataset for the experiment. We also aggregate the noise dataset [MIT-BIH Noise Stress Test Database](https://physionet.org/content/nstdb/1.0.0/) with the clean PTB-XL dataset for training, ehancing the robustness of our MSECG.
 
-For the noisy inputs, we first apply second-ordered 1Hz to 45Hz band-pass filters on 500Hz high-resolution ECG signals from the PTB-XL dataset. Then, we down-sample filtered signals as well three different noises with 360Hz from the MIT-BIH noise dataset to 50Hz. We randomly combine low-resolution ECG signals and noise signals with random SNR and random start points.
+For the 500Hz high-resolution signals in PTB-XL dataset, we first apply second-ordered 1Hz to 45Hz band-pass filters on them. Then, we down-sample filtered signals as well three different noises with 360Hz from the MIT-BIH noise dataset to 50Hz. We randomly combine low-resolution ECG signals and noise signals with random SNR and random start points to produce noisy LR inputs.
 
 For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this paper [DCAE-SR: Design of a Denoising Convolutional Autoencoder for reconstructing Electrocardiograms signals at Super Resolution](https://arxiv.org/abs/2404.15307).
 
 ## Data layout
 
-    SMECG
+    MSECG
       ├── dataset_index
       │     ├── train.txt                       # Index for training dataset
       │     ├── val.txt                         # Index for validation dataset

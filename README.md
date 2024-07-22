@@ -9,9 +9,23 @@ The architecture of the SRECG is designed for Super-Resolution (SR) task, and th
 
 For now, we use [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) dataset for the experiment. We also aggregate the noise dataset [MIT-BIH Noise Stress Test Database](https://physionet.org/content/nstdb/1.0.0/) with the clean PTB-XL dataset for training, ehancing the robustness of our MSECG.
 
-For the 500Hz high-resolution signals in PTB-XL dataset, we first apply second-ordered 1Hz to 45Hz band-pass filters on them. Then, we down-sample filtered signals as well three different noises with 360Hz from the MIT-BIH noise dataset to 50Hz. We randomly combine low-resolution ECG signals and noise signals with random SNR and random start points to produce noisy LR inputs.
+For 500Hz high-resolution signals in the PTB-XL dataset, we first apply second-ordered 1Hz to 45Hz band-pass filters on them. Then, we down-sample filtered signals as well three different noises with 360Hz from the MIT-BIH noise dataset to 50Hz. We randomly combine low-resolution ECG signals and noise signals with random SNR and random start points to produce noisy LR inputs (50Hz).
 
 For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this paper [DCAE-SR: Design of a Denoising Convolutional Autoencoder for reconstructing Electrocardiograms signals at Super Resolution](https://arxiv.org/abs/2404.15307).
+
+## Data pre-processing
+
+    500Hz signals ── Band-pass Filter ──> clean HR (GT)
+                            |
+                      Down-sampling
+                            |
+                       50Hz signals
+                            ├── 50% ──> no adding noises
+                            └── 50% ──> adding noises
+                                              ├── 33.3% ──> bw
+                                              ├── 33.3% ──> em
+                                              └── 33.3% ──> ma
+    
 
 ## Data layout
 

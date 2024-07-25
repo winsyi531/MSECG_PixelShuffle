@@ -20,9 +20,9 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
                       Down-sampling
                             |
                        50Hz signals
-                            ├── 50% ──> no adding noises
-                            └── 50% ──> adding noises
-                                              ├── 33.3% ──> bw ┐
+                            ├── 50% ──> no adding noises ──────┐
+                            └── 50% ──> adding noises          |
+                                              ├── 33.3% ──> bw ┤
                                               ├── 33.3% ──> em ┼── noisy inputs
                                               └── 33.3% ──> ma ┘
     

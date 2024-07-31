@@ -11,6 +11,23 @@ from mamba_ssm.modules.mamba_simple import Mamba, Block
 from mamba_ssm.models.mixer_seq_simple import _init_weights
 from mamba_ssm.ops.triton.layernorm import RMSNorm
 
+class SELayer(nn.Module):
+    def __init__(self, channel, reduction=8):
+        super(SELayer, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channel, channel // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        b, c, _ = x.shape
+        y = self.avg_pool(x).view(b, c)
+        y = self.fc(y).view(b, c, 1)
+        return x * y.expand_as(x)
+
 class ResBlock(nn.Module):
     def __init__(self, in_ch):
         super(ResBlock, self).__init__()
@@ -63,6 +80,40 @@ class UpConv_2(nn.Module):
         out = self.conv_transpose(input)
         out = self.activation(out)
         return out
+
+class PixelShuffle1D(torch.nn.Module):
+    """
+    1D pixel shuffler. 
+    Upscales sample length, downscales channel length
+    "short" is input, "long" is output
+    """
+    def __init__(self, upscale_factor):
+        super(PixelShuffle1D, self).__init__()
+        self.upscale_factor = upscale_factor
+
+    def forward(self, x):
+        B, C, L = x.shape
+        up_C = C // self.upscale_factor
+        up_L = L * self.upscale_factor
+
+        # This pixel shuffle might be wrong
+        x = x.contiguous().view(B, up_C, self.upscale_factor, L)  # [1, 12, 10, 500]
+        x = x.permute(0, 1, 3, 2).contiguous()  # [1, 12, 500, 10]
+        x = x.view(B, up_C, up_L)  # [1, 12, 5000]
+
+        # This pixel shuffle should be right
+        #x = x.view(B, up_C, self.upscale_factor, L)  # [1, 12, 10, 500]
+        #x = x.view(B, up_C, up_L)  # [1, 12, 5000]
+        '''
+        up_x = torch.zeros((B, up_C, up_L)).cuda()
+        for b in range(B):
+            for c in range(up_C):
+                hold_x = torch.tensor(()).cuda()
+                for u in range(self.upscale_factor):
+                    hold_x = torch.cat((hold_x, x[b, c*self.upscale_factor+u, :]), -1)
+                up_x[b, c, :] = hold_x.unsqueeze(0)
+        '''
+        return x
 
 class MambaBlock(nn.Module):
     def __init__(self, in_channels=64, n_layer=1, bidirectional='False'):

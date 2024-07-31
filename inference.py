@@ -38,10 +38,10 @@ if __name__ == '__main__':
     num1 = len(testing_indexes)
 
     for i in tqdm(range(num1), (f'Inference'), unit=' signal'):
-        ds_audio, _, name = test_loader.load_data()
-        ds_audio = ds_audio.cuda()
+        ns_signal, _, name = test_loader.load_data()
+        ns_signal = ns_signal.cuda()
         
-        sr_audio = model(ds_audio)
+        sr_audio = model(ns_signal)
         sr_audio = torch.transpose(sr_audio, 1, 2).to(dtype=torch.float64).cpu().detach().numpy().squeeze()
         np.save(save_path+name+'_sr.npy', sr_audio)
     print('Finish inference process.')

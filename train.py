@@ -64,15 +64,15 @@ def val(opt, model, val_index, epoch):
     num1 = len(val_index)
     MSE = 0.0
     for i in tqdm(range(num1), (f'Epoch[{epoch}/{opt.epoch}]'), unit=' signal'):
-        ds_audio, gt_audio, _ = test_loader.load_data()
-        ds_audio = ds_audio.cuda()
-        gt_audio = np.array(gt_audio, np.float32)
+        ns_signal, hr_signal, _ = test_loader.load_data()
+        ns_signal = ns_signal.cuda()
+        hr_signal = np.array(hr_signal, np.float32)
 
-        sr_audio = model(ds_audio)
+        sr_audio = model(ns_signal)
         sr_audio = sr_audio.cpu().detach().numpy()
         sr_audio = sr_audio.flatten()
-        gt_audio = gt_audio.flatten()
-        mse = ((sr_audio-gt_audio)**2).sum() / len(sr_audio)
+        hr_signal = hr_signal.flatten()
+        mse = ((sr_audio-hr_signal)**2).sum() / len(sr_audio)
         MSE = MSE + mse
 
     return MSE / num1 # output average MSE Score
@@ -88,12 +88,12 @@ def train(opt, train_loader, model, optimizer, epoch, decay_epoch, validation_in
     for i, pack in enumerate(loop):
         optimizer.zero_grad()
         # ---- data prepare ----
-        ds_audio, gt_audio = pack
-        ds_audio, gt_audio = ds_audio.cuda(), gt_audio.cuda()
+        ns_signal, hr_signal = pack
+        ns_signal, hr_signal = ns_signal.cuda(), hr_signal.cuda()
         # ---- forward ----
-        sr_audio = model(ds_audio)
+        sr_audio = model(ns_signal)
         # ---- loss function ----         
-        loss = structure_loss(opt, sr_audio, gt_audio)
+        loss = structure_loss(opt, sr_audio, hr_signal)
         # ---- backward ----
         loss.backward()
         optimizer.step()

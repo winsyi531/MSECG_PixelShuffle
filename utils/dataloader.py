@@ -54,9 +54,8 @@ class PTB_XLDataset(data.Dataset):
         assert hr_signal.shape[0] == 5000
 
         # Down-sample the hr_signal to 50Hz
-        down_fs = 10
-        ds_signal = hr_signal[::down_fs] # (500, 12)
-        assert ds_signal.shape[0] == 500, f'Downsampled signal does not match the downsampling result!!!'
+        ds_signal = hr_signal[::self.down_sample] # (500, 12)
+        assert ds_signal.shape[0] == hr_signal.shape[0] // self.down_sample, f'Downsampled signal does not match the downsampling result!!!'
         
         #sample the noise segment start point
         ns_signal = deepcopy(ds_signal) # (500, 12)
@@ -142,9 +141,8 @@ class test_dataset:
         assert hr_signal.shape[0] == 5000
         
         # Down-sample the hr_signal to 50Hz
-        down_fs = 10
-        ds_signal = hr_signal[::down_fs] # (500, 12)
-        assert ds_signal.shape[0] == 500, f'Downsampled signal does not match the downsampling result!!!'
+        ds_signal = hr_signal[::self.down_sample] # (500, 12)
+        assert ds_signal.shape[0] == hr_signal.shape[0] // self.down_sample, f'Downsampled signal does not match the downsampling result!!!'
 
         #sample the noise segment start point
         ns_signal = deepcopy(ds_signal) # (500, 12)

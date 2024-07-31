@@ -28,7 +28,9 @@ class PTB_XLDataset(data.Dataset):
             noise_wave, _ = wfdb.rdsamp(noise_path)
             noise_wave = np.array(noise_wave, dtype=np.float32)
             #downsample the noise from 360Hz to 50Hz
-            down_fs = (360//50)
+            down_length = (noise_wave.shape[0]*350) // 360
+            noise_wave = resample(noise_wave, down_length, axis=0)
+            down_fs = 350 // 50
             noise_down = noise_wave[::down_fs]
             self.noise[noise] = noise_down
         self.size = len(self.signals)

@@ -133,8 +133,14 @@ If you want to use this code, please cite this paper:
   volume={69},
   number={3},
   pages={250--260},
-  year={2023},
-  publisher={IEEE}
+```
+```bibtex
+@inproceedings{lin2025msecg,
+  title={MSECG: Incorporating Mamba for Robust and Efficient ECG Super-Resolution},
+  author={Lin, Jie and Chiu, I and Wang, Kuan-Chen and Liu, Kai-Chun and Wang, Hsin-Min and Yeh, Ping-Cheng and Tsao, Yu},
+  booktitle={ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2025},
+  organization={IEEE}
 }
 ```
-

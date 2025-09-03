@@ -9,7 +9,7 @@ from .parts import *
 
 class MSECG(nn.Module):
     def __init__(self, mamba_in_ch=64, n_layer=1, bidirectional='False'):
-        super(SRECG, self).__init__()
+        super(MSECG, self).__init__()
         self.conv_in = nn.Sequential(
             nn.Conv1d(in_channels=12, out_channels=mamba_in_ch, kernel_size=15, padding=7),
             nn.LeakyReLU()

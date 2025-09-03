@@ -9,27 +9,24 @@ import torch.nn.functional as F
 import numpy as np
 from .parts import *
 
-class SRECG(nn.Module):
+class MSECG(nn.Module):
     def __init__(self, mamba_in_ch=64, n_layer=1, bidirectional='False'):
         super(SRECG, self).__init__()
         self.conv_in = nn.Sequential(
             nn.Conv1d(in_channels=12, out_channels=mamba_in_ch, kernel_size=15, padding=7),
-            nn.LeakyReLU(),
-            SELayer(mamba_in_ch)
+            nn.LeakyReLU()
         )
         #self.ResNet = nn.ModuleList([ResBlock(mamba_in_ch) for i in range(16)])
         self.mamba = MambaBlock(in_channels=mamba_in_ch, n_layer=n_layer, bidirectional=bidirectional)
         if bidirectional == 'True':
             self.conv_merge = nn.Sequential(
                 nn.Conv1d(in_channels=mamba_in_ch*2, out_channels=mamba_in_ch, kernel_size=15, padding=7),
-                nn.BatchNorm1d(mamba_in_ch),
-                SELayer(mamba_in_ch)
+                nn.BatchNorm1d(mamba_in_ch)
             )
         elif bidirectional == 'False':
             self.conv_merge = nn.Sequential(
                 nn.Conv1d(in_channels=mamba_in_ch, out_channels=mamba_in_ch, kernel_size=15, padding=7),
-                nn.BatchNorm1d(mamba_in_ch),
-                SELayer(mamba_in_ch)
+                nn.BatchNorm1d(mamba_in_ch)
             )
 
         self.conv_ps1 = nn.Conv1d(in_channels=mamba_in_ch, out_channels=120, kernel_size=15, padding=7)
@@ -48,7 +45,7 @@ class SRECG(nn.Module):
         return out
 
 if __name__ == '__main__':
-    model = SRECG().cuda()
+    model = MSECG().cuda()
     input_tensor = torch.randn(1, 12, 500).cuda()
 
     prediction1 = model(input_tensor)

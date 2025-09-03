@@ -126,15 +126,6 @@ Five scores will be stored in five different txt files.
 ## BibTeX
 If you want to use this code, please cite this paper:
 ```bibtex
-@article{chen2023srecg,
-  title={SRECG: ECG Signal Super-Resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification},
-  author={Chen, Tsai-Min and Tsai, Yuan-Hong and Tseng, Huan-Hsin and Liu, Kai-Chun and Chen, Jhih-Yu and Huang, Chih-Han and Li, Guo-Yuan and Shen, Chun-Yen and Tsao, Yu},
-  journal={IEEE Transactions on Consumer Electronics},
-  volume={69},
-  number={3},
-  pages={250--260},
-```
-```bibtex
 @inproceedings{lin2025msecg,
   title={MSECG: Incorporating Mamba for Robust and Efficient ECG Super-Resolution},
   author={Lin, Jie and Chiu, I and Wang, Kuan-Chen and Liu, Kai-Chun and Wang, Hsin-Min and Yeh, Ping-Cheng and Tsao, Yu},

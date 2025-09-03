@@ -16,7 +16,6 @@ class MSECG(nn.Module):
             nn.Conv1d(in_channels=12, out_channels=mamba_in_ch, kernel_size=15, padding=7),
             nn.LeakyReLU()
         )
-        #self.ResNet = nn.ModuleList([ResBlock(mamba_in_ch) for i in range(16)])
         self.mamba = MambaBlock(in_channels=mamba_in_ch, n_layer=n_layer, bidirectional=bidirectional)
         if bidirectional == 'True':
             self.conv_merge = nn.Sequential(

@@ -36,11 +36,11 @@ For evaluation, we follow the metrics (MSE, RMSE, SSIM, SNR, and PSNR) in this p
       │     └── test.txt                        # Index for testing dataset
       │
       ├── model
-      │     ├── model.py                        # Main architecture of SMECG
-      │     └── parts.py                        # Modules adopted in the SMECG
+      │     ├── model.py                        # Main architecture of MSECG
+      │     └── parts.py                        # Modules adopted in the MSECG
       │
       ├── model_pth                             # Checkpoint file for the best performance
-      │     └── SRECG-best.pth                  # You have to train your own checkpoint files
+      │     └── MSECG-best.pth                  # You have to train your own checkpoint files
       │
       ├── sr_signal                             # Folder for SR signals
       │     ├── SR signal 1                     # You have to inference your own signals

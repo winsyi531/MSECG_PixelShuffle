@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 import argparse
-from model.model import SRECG
+from model.model import MSECG
 from utils.dataloader import get_loader, test_dataset, get_dataset_filelist
 from utils.generate_index import generate
 from utils.loss_function import MSE_LOSS, MAG_MSE_Loss, COM_MSE_Loss, RI_MSE_Loss
@@ -80,7 +80,7 @@ def val(opt, model, val_index, epoch):
 ### training process ###
 def train(opt, train_loader, model, optimizer, epoch, decay_epoch, validation_indexes):
     if epoch == decay_epoch:
-        model.load_state_dict(torch.load(opt.train_save+'SRECG-best.pth'))
+        model.load_state_dict(torch.load(opt.train_save+'MSECG-best.pth'))
         print('Adopting the best checkpoint for following decayed learning rate.')
     model.train()
     global best
@@ -127,7 +127,7 @@ def train(opt, train_loader, model, optimizer, epoch, decay_epoch, validation_in
 
         if (epoch==1) or (valid_loss<best):
             best = valid_loss # store best Dice Score
-            torch.save(model.state_dict(), save_path+'SRECG-best.pth') # save best model
+            torch.save(model.state_dict(), save_path+'MSECG-best.pth') # save best model
             print('########## Best Model Saved, MSE: {:.8f} ##########'.format(best))
 ####################################################################################################################################
 
@@ -169,7 +169,7 @@ if __name__ == '__main__':
 
     # ---- build models ----
     #torch.cuda.set_device(0)  # set your gpu device
-    model = SRECG(mamba_in_ch=opt.mamba_in_ch, n_layer=opt.n_layer, bidirectional=opt.bidirectional).cuda()
+    model = MSECG(mamba_in_ch=opt.mamba_in_ch, n_layer=opt.n_layer, bidirectional=opt.bidirectional).cuda()
     
     # ---- summary ---- #
     summary(model, (1, 12, 500)) # show model architecture and parameters

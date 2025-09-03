@@ -1,7 +1,5 @@
 """
-This python file is the main architecture of WCNet.
-self.unet is the first CAU-Net.
-Dimension behind feature map (C, H, W)
+This python file is the main architecture of MSECG.
 """
 import torch
 import torch.nn as nn

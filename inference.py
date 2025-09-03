@@ -1,7 +1,7 @@
 import os, argparse
 import torch
 import numpy as np
-from model.model import SRECG
+from model.model import MSECG
 from utils.dataloader import test_dataset, get_dataset_filelist
 from tqdm import tqdm
 import wfdb
@@ -12,14 +12,14 @@ if __name__ == '__main__':
     parser.add_argument('--mamba_in_ch', type=int, default=128, help='channels for input of Mamba block')
     parser.add_argument('--n_layer', type=int, default=1, help='number of layers for Mamba block')
     parser.add_argument('--bidirectional', type=str, default='False', help='True or False for Bi-Directional Mamba')
-    parser.add_argument('--pth_path', type=str, default='./model_pth/SRECG-best.pth') # input model checkpoint file
+    parser.add_argument('--pth_path', type=str, default='./model_pth/MSECG-best.pth') # input model checkpoint file
     parser.add_argument('--downsample_rate', type=int, default=10, help='how many times to down sample the signals')
     parser.add_argument('--input_testing_file', type=str, default='./dataset_index/test.txt')
     parser.add_argument('--noise_dir', type=str, default='/dataset/MIT-BIH_noise/')
     opt = parser.parse_args()
 
     ### set network ###
-    model = SRECG(opt.mamba_in_ch, opt.n_layer, opt.bidirectional)
+    model = MSECG(opt.mamba_in_ch, opt.n_layer, opt.bidirectional)
     
     ### input model checkpoint file ###
     model.load_state_dict(torch.load(opt.pth_path))

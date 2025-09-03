@@ -1,5 +1,5 @@
 """
-This python file includes every module adopted in WCNet.
+This python file includes every module adopted in MSECG.
 Any module is free to add in this file.
 """
 import torch
@@ -10,76 +10,6 @@ from functools import partial
 from mamba_ssm.modules.mamba_simple import Mamba, Block
 from mamba_ssm.models.mixer_seq_simple import _init_weights
 from mamba_ssm.ops.triton.layernorm import RMSNorm
-
-class SELayer(nn.Module):
-    def __init__(self, channel, reduction=8):
-        super(SELayer, self).__init__()
-        self.avg_pool = nn.AdaptiveAvgPool1d(1)
-        self.fc = nn.Sequential(
-            nn.Linear(channel, channel // reduction, bias=False),
-            nn.ReLU(inplace=True),
-            nn.Linear(channel // reduction, channel, bias=False),
-            nn.Sigmoid()
-        )
-
-    def forward(self, x):
-        b, c, _ = x.shape
-        y = self.avg_pool(x).view(b, c)
-        y = self.fc(y).view(b, c, 1)
-        return x * y.expand_as(x)
-
-class ResBlock(nn.Module):
-    def __init__(self, in_ch):
-        super(ResBlock, self).__init__()
-        self.conv_block = nn.Sequential(
-            nn.Conv1d(in_ch, in_ch, kernel_size=15, padding=7),
-            nn.BatchNorm1d(in_ch),
-            nn.LeakyReLU(),
-            nn.Conv1d(in_ch, in_ch, kernel_size=15, padding=7),
-            nn.BatchNorm1d(in_ch)
-        )
-    
-    def forward(self, x):
-        res = x
-        x1 = self.conv_block(x)
-        out = res + x1
-        return out
-
-class UpConv_5(nn.Module):
-    def __init__(self, in_ch, out_ch):
-        super(UpConv_5, self).__init__()
-        self.conv_transpose = nn.ConvTranspose1d(
-            in_channels=in_ch,
-            out_channels=out_ch,
-            kernel_size=16,
-            stride=5,
-            padding=6,
-            output_padding=1
-        )
-        self.activation = nn.LeakyReLU()
-        
-    def forward(self, input):
-        out = self.conv_transpose(input)
-        out = self.activation(out)
-        return out
-
-class UpConv_2(nn.Module):
-    def __init__(self, in_ch, out_ch):
-        super(UpConv_2, self).__init__()
-        self.conv_transpose = nn.ConvTranspose1d(
-            in_channels=in_ch,
-            out_channels=out_ch,
-            kernel_size=16,
-            stride=2,
-            padding=7,
-            output_padding=0
-        )
-        self.activation = nn.LeakyReLU()
-        
-    def forward(self, input):
-        out = self.conv_transpose(input)
-        out = self.activation(out)
-        return out
 
 class PixelShuffle1D(torch.nn.Module):
     """

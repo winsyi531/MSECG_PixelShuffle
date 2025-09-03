@@ -1,5 +1,6 @@
 # MSECG
 
+This is the official code of [MSECG: Incorporating Mamba for Robust and Efficient ECG Super-Resolution](https://ieeexplore.ieee.org/abstract/document/10890523?casa_token=vhFrJSK8WwQAAAAA:R3zaan7_P3akqfhDtNpt5D0PEZm9wLcxRCLky-PjQBN2eDKHF5CKEPR5Ot8b1xVgTmT7HfO4#full-text-header).
 This network is based on a SR model of [SRECG: ECG Signal Super-resolution Framework for Portable/Wearable Devices in Cardiac Arrhythmias Classification](https://arxiv.org/abs/2012.03803).
 We replace the Residual Blocks in the intermediate layers of SRECG with Mamba blocks.
 
